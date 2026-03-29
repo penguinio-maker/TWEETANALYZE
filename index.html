@@ -245,6 +245,24 @@
       box-shadow: 0 0 0 3px rgba(0, 191, 255, 0.2);
     }
 
+    .input-shell.error {
+      border-color: rgba(255, 77, 77, 0.7);
+      box-shadow: 0 0 0 3px rgba(255, 77, 77, 0.18);
+    }
+
+    .input-error {
+      margin-top: 10px;
+      color: #ff9a9a;
+      font-size: 0.86rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      display: none;
+    }
+
+    .input-error.show {
+      display: block;
+    }
+
     .at-prefix {
       color: var(--secondary);
       font-size: 1.18rem;
@@ -687,11 +705,12 @@
           <span class="line"></span>
         </div>
         <label for="username">Tweet</label>
-        <div class="input-shell">
+        <div class="input-shell" id="inputShell">
           <span class="at-prefix">✍</span>
           <input id="username" type="text" name="username" placeholder="Paste your tweet">
           <button class="analyze-btn" id="analyzeButton" type="button">Analyze -&gt;</button>
         </div>
+        <div class="input-error" id="inputError">Please paste a tweet first</div>
         <div class="terminal" id="terminalBox" aria-live="polite">
           <div class="terminal-output" id="terminalOutput"></div>
         </div>
@@ -785,10 +804,62 @@
     const copyResultBtn = document.getElementById("copyResultBtn");
     const shareResultBtn = document.getElementById("shareResultBtn");
     const analyzeAnotherBtn = document.getElementById("analyzeAnotherBtn");
+    const inputShell = document.getElementById("inputShell");
+    const inputError = document.getElementById("inputError");
 
     const SHARE_LINK = "https://your-link-here.com";
 
     const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+    // Sound engine (minimal synth). Plays on user actions only.
+    let audioCtx;
+    const ensureAudio = () => {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx.state === "suspended") {
+        audioCtx.resume();
+      }
+      return audioCtx;
+    };
+
+    const playTone = ({ freq = 440, duration = 0.08, type = "sine", gain = 0.08, detune = 0 }) => {
+      const ctx = ensureAudio();
+      const osc = ctx.createOscillator();
+      const g = ctx.createGain();
+      osc.type = type;
+      osc.frequency.setValueAtTime(freq, ctx.currentTime);
+      if (detune) osc.detune.setValueAtTime(detune, ctx.currentTime);
+      g.gain.setValueAtTime(0, ctx.currentTime);
+      g.gain.linearRampToValueAtTime(gain, ctx.currentTime + 0.01);
+      g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + duration);
+      osc.connect(g).connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + duration);
+    };
+
+    const playClick = () => {
+      playTone({ freq: 520, duration: 0.05, type: "square", gain: 0.04 });
+    };
+
+    const playType = () => {
+      playTone({ freq: 1400 + Math.random() * 400, duration: 0.03, type: "triangle", gain: 0.03 });
+    };
+
+    const playError = () => {
+      const ctx = ensureAudio();
+      const osc = ctx.createOscillator();
+      const g = ctx.createGain();
+      osc.type = "sawtooth";
+      osc.frequency.setValueAtTime(420, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(120, ctx.currentTime + 0.18);
+      g.gain.setValueAtTime(0, ctx.currentTime);
+      g.gain.linearRampToValueAtTime(0.08, ctx.currentTime + 0.02);
+      g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.2);
+      osc.connect(g).connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.22);
+    };
 
     const typeLine = async (line, lineClass = "") => {
       const row = document.createElement("div");
@@ -1169,6 +1240,7 @@
 
     // Button logic: Copy result (image only)
     copyResultBtn.addEventListener("click", async () => {
+      playClick();
       const prev = copyResultBtn.textContent;
       copyResultBtn.textContent = "Preparing...";
       const outcome = await copyNodeAsImage(resultCard);
@@ -1186,6 +1258,7 @@
 
     // Button logic: Share
     shareResultBtn.addEventListener("click", () => {
+      playClick();
       const shareText = [
         "I checked my tweet with VibeCheckr",
         "",
@@ -1207,6 +1280,7 @@
 
     // Button logic: Analyze another
     analyzeAnotherBtn.addEventListener("click", () => {
+      playClick();
       usernameInput.value = "";
       terminalOutput.textContent = "";
       terminalBox.classList.remove("is-active");
@@ -1221,6 +1295,17 @@
 
     analyzeButton.addEventListener("click", async () => {
       const input = usernameInput.value.trim();
+      if (!input) {
+        playError();
+        inputShell.classList.add("error");
+        inputError.classList.add("show");
+        usernameInput.focus();
+        return;
+      }
+
+      playClick();
+      inputShell.classList.remove("error");
+      inputError.classList.remove("show");
       const result = analyzeTweet(input);
       const steps = generateLoadingLines();
 
@@ -1237,6 +1322,18 @@
       updateResultUI(result);
       await revealResult();
       analyzeButton.disabled = false;
+    });
+
+    usernameInput.addEventListener("input", () => {
+      if (usernameInput.value.trim()) {
+        inputShell.classList.remove("error");
+        inputError.classList.remove("show");
+      }
+      const now = Date.now();
+      if (!usernameInput._lastTypeSound || now - usernameInput._lastTypeSound > 60) {
+        playType();
+        usernameInput._lastTypeSound = now;
+      }
     });
   </script>
 </body>
