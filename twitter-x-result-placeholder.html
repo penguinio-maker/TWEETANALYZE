@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>X Analysis Result Placeholder</title>
+  <style>
+    :root {
+      --bg-0: #06080c;
+      --bg-1: #0a1017;
+      --panel: rgba(12, 19, 29, 0.84);
+      --panel-soft: rgba(16, 25, 36, 0.72);
+      --line: rgba(109, 182, 255, 0.24);
+      --line-strong: rgba(109, 182, 255, 0.42);
+      --text-soft: #9eb5cf;
+      --text-muted: #6f88a6;
+      --accent: #55c8ff;
+      --accent-2: #48e3c2;
+      --radius-lg: 20px;
+      --radius-md: 14px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      min-height: 100%;
+    }
+
+    body {
+      font-family: "Segoe UI", Inter, Roboto, Arial, sans-serif;
+      color: #e7f0ff;
+      background:
+        radial-gradient(circle at 20% 18%, rgba(85, 200, 255, 0.14), transparent 34%),
+        radial-gradient(circle at 78% 72%, rgba(72, 227, 194, 0.1), transparent 36%),
+        radial-gradient(circle at 50% 120%, rgba(27, 69, 112, 0.22), transparent 48%),
+        linear-gradient(180deg, var(--bg-1), var(--bg-0) 44%);
+      padding: 36px 18px 60px;
+    }
+
+    .frame {
+      width: min(1080px, 100%);
+      margin: 0 auto;
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      background: linear-gradient(180deg, rgba(8, 13, 20, 0.92), rgba(6, 10, 15, 0.94));
+      box-shadow:
+        0 28px 70px rgba(0, 0, 0, 0.54),
+        0 0 38px rgba(85, 200, 255, 0.12),
+        0 0 0 1px rgba(255, 255, 255, 0.02) inset;
+      overflow: hidden;
+    }
+
+    .frame-top {
+      padding: 14px 20px;
+      border-bottom: 1px solid rgba(109, 182, 255, 0.18);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(180deg, rgba(12, 24, 36, 0.66), rgba(12, 24, 36, 0.16));
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-soft);
+      font-size: 0.72rem;
+      font-weight: 600;
+    }
+
+    #result {
+      padding: 22px;
+      display: grid;
+      gap: 16px;
+    }
+
+    .panel {
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      background: var(--panel);
+      padding: 16px;
+    }
+
+    .result-intro {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .intro-left {
+      display: grid;
+      gap: 8px;
+      min-width: 280px;
+      flex: 1;
+    }
+
+    .status-badge {
+      width: 120px;
+      height: 28px;
+      border-radius: 999px;
+      border: 1px solid var(--line-strong);
+      background: rgba(85, 200, 255, 0.08);
+    }
+
+    .profile-summary {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 14px;
+      align-items: center;
+    }
+
+    #result-avatar {
+      width: 62px;
+      height: 62px;
+      border-radius: 999px;
+      border: 1px solid var(--line-strong);
+      background:
+        radial-gradient(circle at 35% 30%, rgba(85, 200, 255, 0.28), rgba(85, 200, 255, 0.08));
+      box-shadow: 0 0 18px rgba(85, 200, 255, 0.16);
+    }
+
+    .identity {
+      display: grid;
+      gap: 8px;
+    }
+
+    .result-layout {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 14px;
+    }
+
+    .main-column,
+    .side-column {
+      display: grid;
+      gap: 14px;
+    }
+
+    .primary-card {
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius-md);
+      background: linear-gradient(180deg, rgba(16, 28, 41, 0.58), rgba(12, 20, 30, 0.72));
+      padding: 14px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .chip-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      padding-top: 4px;
+    }
+
+    .chip {
+      width: 82px;
+      height: 28px;
+      border-radius: 999px;
+      border: 1px solid rgba(109, 182, 255, 0.34);
+      background: rgba(85, 200, 255, 0.06);
+    }
+
+    #result-traits {
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      background: var(--panel-soft);
+      padding: 12px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .trait-item {
+      border: 1px solid rgba(109, 182, 255, 0.2);
+      border-radius: 12px;
+      padding: 10px;
+      display: grid;
+      gap: 7px;
+      background: rgba(255, 255, 255, 0.01);
+    }
+
+    .visual-bar {
+      height: 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(109, 182, 255, 0.26);
+      background: rgba(85, 200, 255, 0.08);
+    }
+
+    .highlights {
+      display: grid;
+      gap: 10px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .highlight-card {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.01);
+      padding: 10px;
+      display: grid;
+      gap: 7px;
+      min-height: 96px;
+    }
+
+    #result-share {
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius-md);
+      background: rgba(13, 24, 36, 0.65);
+      padding: 12px;
+      display: grid;
+      gap: 10px;
+      align-content: start;
+      min-height: 150px;
+    }
+
+    .share-actions {
+      display: grid;
+      gap: 8px;
+    }
+
+    .action-btn {
+      height: 40px;
+      border-radius: 10px;
+      border: 1px solid rgba(109, 182, 255, 0.3);
+      background: rgba(85, 200, 255, 0.06);
+    }
+
+    .skeleton {
+      border-radius: 8px;
+      border: 1px solid rgba(109, 182, 255, 0.22);
+      background: linear-gradient(90deg, #1a2838, #2a3f57, #1a2838);
+      background-size: 220% 100%;
+      animation: shimmer 1.7s linear infinite;
+    }
+
+    .h-10 { height: 10px; }
+    .h-12 { height: 12px; }
+    .h-14 { height: 14px; }
+    .h-16 { height: 16px; }
+    .h-18 { height: 18px; }
+    .h-44 { height: 44px; }
+    .h-60 { height: 60px; }
+    .w-22 { width: 22%; }
+    .w-30 { width: 30%; }
+    .w-36 { width: 36%; }
+    .w-44 { width: 44%; }
+    .w-52 { width: 52%; }
+    .w-64 { width: 64%; }
+    .w-72 { width: 72%; }
+    .w-84 { width: 84%; }
+    .w-full { width: 100%; }
+
+    @keyframes shimmer {
+      0% { background-position: 220% 0; }
+      100% { background-position: -220% 0; }
+    }
+
+    @media (max-width: 940px) {
+      .result-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 680px) {
+      .highlights {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="frame">
+    <div class="frame-top">X Personality Scan</div>
+
+    <section id="result" aria-label="Analysis result placeholder">
+      <!-- Top label / section intro: product label + optional status -->
+      <header class="panel result-intro">
+        <div class="intro-left">
+          <!-- Dynamic block: result top label -->
+          <div id="result-top-label" class="skeleton h-16 w-36"></div>
+          <!-- Dynamic block: optional status/meta text -->
+          <div id="result-top-status" class="skeleton h-12 w-52"></div>
+        </div>
+        <!-- Dynamic block: optional status badge -->
+        <div id="result-status-badge" class="status-badge" aria-hidden="true"></div>
+      </header>
+
+      <!-- Profile area: avatar, display name, @username, small meta -->
+      <section class="panel profile-summary" aria-label="Profile summary">
+        <!-- Dynamic block: user avatar -->
+        <div id="result-avatar" aria-hidden="true"></div>
+        <div class="identity">
+          <!-- Dynamic block: display name -->
+          <div id="result-name" class="skeleton h-16 w-44"></div>
+          <!-- Dynamic block: @username -->
+          <div id="result-handle" class="skeleton h-14 w-30"></div>
+          <!-- Dynamic block: small profile meta line -->
+          <div id="result-meta" class="skeleton h-12 w-72"></div>
+        </div>
+      </section>
+
+      <div class="result-layout">
+        <div class="main-column">
+          <!-- Main summary card: archetype title + one-line summary + chips -->
+          <article class="primary-card" aria-label="Primary summary">
+            <!-- Dynamic block: main archetype/personality title -->
+            <div id="result-archetype" class="skeleton h-18 w-52"></div>
+            <!-- Dynamic block: short one-line summary -->
+            <div id="result-summary" class="skeleton h-14 w-84"></div>
+            <!-- Dynamic block: optional tag chips/badges -->
+            <div id="result-tags" class="chip-row" aria-hidden="true">
+              <div class="chip"></div>
+              <div class="chip"></div>
+              <div class="chip"></div>
+            </div>
+          </article>
+
+          <!-- Trait / metric area: 3-5 dynamic trait or dimension items -->
+          <section id="result-traits" aria-label="Traits and metrics">
+            <article class="trait-item">
+              <!-- Dynamic block: trait label -->
+              <div class="skeleton h-12 w-36"></div>
+              <!-- Dynamic block: trait value/title -->
+              <div class="skeleton h-14 w-52"></div>
+              <!-- Dynamic block: optional visual bar -->
+              <div class="visual-bar"></div>
+              <!-- Dynamic block: optional trait description -->
+              <div class="skeleton h-10 w-72"></div>
+            </article>
+            <article class="trait-item">
+              <div class="skeleton h-12 w-30"></div>
+              <div class="skeleton h-14 w-44"></div>
+              <div class="visual-bar"></div>
+              <div class="skeleton h-10 w-64"></div>
+            </article>
+            <article class="trait-item">
+              <div class="skeleton h-12 w-22"></div>
+              <div class="skeleton h-14 w-36"></div>
+              <div class="visual-bar"></div>
+              <div class="skeleton h-10 w-52"></div>
+            </article>
+            <article class="trait-item">
+              <div class="skeleton h-12 w-30"></div>
+              <div class="skeleton h-14 w-44"></div>
+              <div class="visual-bar"></div>
+              <div class="skeleton h-10 w-72"></div>
+            </article>
+          </section>
+        </div>
+
+        <aside class="side-column">
+          <!-- Highlight blocks: roast, signature, strongest trait, posting style -->
+          <section class="panel highlights" aria-label="Highlights">
+            <article id="result-roast" class="highlight-card">
+              <!-- Dynamic block: roast -->
+              <div class="skeleton h-12 w-44"></div>
+              <div class="skeleton h-60 w-full"></div>
+            </article>
+            <article id="result-signature" class="highlight-card">
+              <!-- Dynamic block: signature line -->
+              <div class="skeleton h-12 w-52"></div>
+              <div class="skeleton h-60 w-full"></div>
+            </article>
+            <article id="result-strongest-trait" class="highlight-card">
+              <!-- Dynamic block: strongest trait -->
+              <div class="skeleton h-12 w-64"></div>
+              <div class="skeleton h-44 w-full"></div>
+            </article>
+            <article id="result-posting-style" class="highlight-card">
+              <!-- Dynamic block: posting style -->
+              <div class="skeleton h-12 w-52"></div>
+              <div class="skeleton h-44 w-full"></div>
+            </article>
+          </section>
+
+          <!-- Share area: share/copy/download actions -->
+          <section id="result-share" aria-label="Share actions">
+            <!-- Dynamic block: share area title -->
+            <div class="skeleton h-14 w-44"></div>
+            <div class="share-actions" aria-hidden="true">
+              <!-- Dynamic block: share button -->
+              <div class="action-btn"></div>
+              <!-- Dynamic block: copy result button -->
+              <div class="action-btn"></div>
+              <!-- Dynamic block: optional download button -->
+              <div class="action-btn"></div>
+            </div>
+          </section>
+        </aside>
+      </div>
+    </section>
+  </div>
+</body>
+</html>

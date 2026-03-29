@@ -1,0 +1,1243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VibeCheckr</title>
+  <style>
+    :root {
+      --bg: #050505;
+      --text: #00ff9c;
+      --secondary: #00bfff;
+      --danger: #ff4d4d;
+      --panel: rgba(4, 15, 18, 0.78);
+      --line: rgba(0, 191, 255, 0.42);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      min-height: 100%;
+    }
+
+    body {
+      font-family: "JetBrains Mono", "Consolas", "SFMono-Regular", "Menlo", "Courier New", monospace;
+      background:
+        radial-gradient(circle at 50% 14%, rgba(0, 191, 255, 0.12), transparent 36%),
+        radial-gradient(circle at 80% 76%, rgba(0, 255, 156, 0.08), transparent 32%),
+        linear-gradient(160deg, #0a0a0a 0%, #050505 52%, #020202 100%);
+      color: var(--text);
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.03), transparent 42%),
+        radial-gradient(circle at 80% 70%, rgba(0, 191, 255, 0.05), transparent 30%);
+      opacity: 0.9;
+      pointer-events: none;
+    }
+
+    .bg-lights {
+      position: fixed;
+      inset: -12%;
+      pointer-events: none;
+      z-index: 0;
+      filter: blur(24px);
+      opacity: 0.82;
+    }
+
+    .bg-lights span {
+      position: absolute;
+      border-radius: 999px;
+      mix-blend-mode: screen;
+      transform-origin: center;
+      animation-timing-function: ease-in-out;
+      animation-iteration-count: infinite;
+      animation-direction: alternate;
+    }
+
+    .bg-lights .light-a {
+      width: 38vw;
+      height: 38vw;
+      left: -8vw;
+      top: 10vh;
+      background: radial-gradient(circle, rgba(0, 191, 255, 0.48) 0%, rgba(0, 191, 255, 0) 68%);
+      animation-name: driftA, flickerA;
+      animation-duration: 8.5s, 1.6s;
+    }
+
+    .bg-lights .light-b {
+      width: 34vw;
+      height: 34vw;
+      right: -6vw;
+      top: 6vh;
+      background: radial-gradient(circle, rgba(0, 255, 156, 0.44) 0%, rgba(0, 255, 156, 0) 68%);
+      animation-name: driftB, flickerB;
+      animation-duration: 9s, 1.8s;
+    }
+
+    .bg-lights .light-c {
+      width: 32vw;
+      height: 32vw;
+      left: 36vw;
+      bottom: -10vh;
+      background: radial-gradient(circle, rgba(0, 191, 255, 0.34) 0%, rgba(0, 191, 255, 0) 72%);
+      animation-name: driftC, flickerA;
+      animation-duration: 10.5s, 1.9s;
+    }
+
+    .bg-lights .light-d {
+      width: 20vw;
+      height: 20vw;
+      left: 58vw;
+      top: 48vh;
+      background: radial-gradient(circle, rgba(255, 77, 77, 0.26) 0%, rgba(255, 77, 77, 0) 72%);
+      animation-name: driftD, flickerB;
+      animation-duration: 7.5s, 1.4s;
+    }
+
+    .stage {
+      min-height: 100vh;
+      position: relative;
+      display: grid;
+      place-items: center;
+      padding: 84px 24px 24px;
+      isolation: isolate;
+      z-index: 1;
+      transition: filter 380ms ease, opacity 380ms ease;
+    }
+
+    body.is-transitioning .stage {
+      filter: blur(3px);
+      opacity: 0.78;
+    }
+
+    .top-strip {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 58px;
+      border-bottom: 1px solid rgba(0, 191, 255, 0.3);
+      background: linear-gradient(180deg, rgba(2, 12, 16, 0.78), rgba(2, 12, 16, 0.32));
+      backdrop-filter: blur(6px);
+      display: grid;
+      place-items: center;
+      z-index: 5;
+      user-select: none;
+    }
+
+    .top-strip-title {
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: 0.78rem;
+      color: #b5f3ff;
+      text-shadow: 0 0 10px rgba(0, 191, 255, 0.28);
+      white-space: nowrap;
+    }
+
+    .hero {
+      width: min(94vw, 900px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      text-align: center;
+    }
+
+    h1 {
+      margin: 0;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      line-height: 0.98;
+      font-size: clamp(2.5rem, 6.4vw, 5.7rem);
+      color: #e5fff0;
+      text-shadow: 0 0 22px rgba(0, 255, 156, 0.26);
+      white-space: nowrap;
+      text-align: center;
+      user-select: none;
+      -webkit-user-select: none;
+      -ms-user-select: none;
+      -webkit-touch-callout: none;
+      pointer-events: none;
+    }
+
+    .tagline {
+      margin: 8px 0 0;
+      text-align: center;
+      color: #a4d9ef;
+      font-size: 0.96rem;
+      letter-spacing: 0.03em;
+      max-width: 620px;
+      line-height: 1.55;
+    }
+
+    .panel-wrap {
+      width: 100%;
+      margin-top: 8px;
+    }
+
+    .panel {
+      border-radius: 20px;
+      border: 1px solid var(--line);
+      background:
+        radial-gradient(circle at 92% 8%, rgba(0, 191, 255, 0.12), transparent 34%),
+        var(--panel);
+      box-shadow:
+        0 24px 70px rgba(0, 0, 0, 0.68),
+        0 0 0 1px rgba(255, 255, 255, 0.03) inset,
+        0 0 24px rgba(0, 191, 255, 0.14);
+      backdrop-filter: blur(10px);
+      padding: clamp(28px, 4.6vw, 44px);
+      text-align: left;
+    }
+
+    .meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+      font-size: 0.76rem;
+      color: #91cde6;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      user-select: none;
+    }
+
+    .meta .line {
+      height: 1px;
+      flex: 1;
+      background: linear-gradient(90deg, rgba(0, 191, 255, 0.45), transparent);
+    }
+
+    label {
+      display: block;
+      margin-bottom: 12px;
+      color: #9ccfea;
+      font-size: 0.92rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .input-shell {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border: 1px solid rgba(0, 191, 255, 0.46);
+      border-radius: 14px;
+      padding: 11px;
+      background: rgba(0, 191, 255, 0.045);
+      transition: box-shadow 180ms ease, border-color 180ms ease;
+    }
+
+    .input-shell:focus-within {
+      border-color: rgba(0, 255, 156, 0.66);
+      box-shadow: 0 0 0 3px rgba(0, 191, 255, 0.2);
+    }
+
+    .at-prefix {
+      color: var(--secondary);
+      font-size: 1.18rem;
+      font-weight: 700;
+      padding: 0 4px 0 8px;
+      user-select: none;
+    }
+
+    .input-shell input {
+      flex: 1;
+      min-width: 0;
+      border: 0;
+      background: transparent;
+      color: #d6ffe8;
+      font-family: inherit;
+      font-size: 1.03rem;
+      padding: 10px 4px;
+    }
+
+    .input-shell input::placeholder {
+      color: rgba(158, 221, 244, 0.54);
+    }
+
+    .input-shell input:focus {
+      outline: none;
+    }
+
+    .analyze-btn {
+      border: 1px solid rgba(0, 255, 156, 0.62);
+      border-radius: 11px;
+      background: linear-gradient(135deg, rgba(0, 255, 156, 0.18), rgba(0, 191, 255, 0.16));
+      color: #e3fff3;
+      font-family: inherit;
+      font-size: 0.95rem;
+      font-weight: 700;
+      padding: 12px 18px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: transform 180ms ease, box-shadow 180ms ease;
+    }
+
+    .analyze-btn:hover,
+    .analyze-btn:focus-visible {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 22px rgba(0, 0, 0, 0.4), 0 0 13px rgba(0, 255, 156, 0.22);
+      outline: none;
+    }
+
+    .analyze-btn:disabled {
+      opacity: 0.62;
+      cursor: wait;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .terminal {
+      margin-top: 16px;
+      border: 1px solid rgba(0, 191, 255, 0.34);
+      border-radius: 12px;
+      background: rgba(0, 9, 12, 0.62);
+      min-height: 0;
+      max-height: 0;
+      opacity: 0;
+      overflow: hidden;
+      transition: max-height 380ms ease, opacity 280ms ease, padding 280ms ease;
+      padding: 0 14px;
+    }
+
+    .terminal.is-active {
+      min-height: 170px;
+      max-height: 280px;
+      opacity: 1;
+      padding: 14px;
+    }
+
+    .terminal-output {
+      margin: 0;
+      white-space: pre-wrap;
+      color: #b7f5d8;
+      font-size: 0.88rem;
+      line-height: 1.45;
+      font-family: inherit;
+    }
+
+    .terminal .ready {
+      color: #ff4d4d;
+      font-weight: 700;
+      text-shadow: 0 0 10px rgba(255, 77, 77, 0.35);
+    }
+
+    .result-section {
+      min-height: 100vh;
+      padding: 110px 24px 40px;
+      position: relative;
+      z-index: 1;
+      display: grid;
+      place-items: start center;
+    }
+
+    .result-section.hidden {
+      display: none;
+    }
+
+    .result-shell {
+      width: min(94vw, 760px);
+      opacity: 0;
+      transform: translateY(34px);
+      transition: opacity 700ms ease, transform 700ms cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .result-shell.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .result-card {
+      border: 2px solid rgba(0, 191, 255, 0.5);
+      border-radius: 18px;
+      background:
+        radial-gradient(circle at 95% 8%, rgba(0, 191, 255, 0.14), transparent 34%),
+        rgba(10, 16, 26, 0.96);
+      box-shadow:
+        0 18px 42px rgba(0, 0, 0, 0.55),
+        0 0 0 1px rgba(255, 255, 255, 0.04) inset;
+      padding: clamp(28px, 3.8vw, 36px);
+      display: grid;
+      gap: 20px;
+      width: min(760px, 92vw);
+    }
+
+    .result-kicker {
+      font-size: 0.8rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #8fd2ee;
+    }
+
+    .result-title {
+      font-size: 0.95rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #a6e5ff;
+    }
+
+    .result-archetype {
+      font-size: clamp(1.9rem, 4vw, 2.6rem);
+      color: #eafff6;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      text-shadow: 0 0 10px rgba(0, 255, 156, 0.15);
+    }
+
+    .result-archetype-wrap {
+      display: grid;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .result-archetype-sub {
+      font-size: 0.78rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #8fd2ee;
+    }
+
+    .result-archetype-underline {
+      height: 3px;
+      width: min(220px, 60%);
+      border-radius: 999px;
+      background: linear-gradient(90deg, rgba(0, 255, 156, 0.85), rgba(0, 191, 255, 0.85));
+      box-shadow: 0 0 8px rgba(0, 191, 255, 0.28);
+    }
+
+    .quote {
+      font-size: 0.98rem;
+      color: #d2f5ff;
+      border-left: 2px solid rgba(0, 191, 255, 0.5);
+      padding-left: 12px;
+    }
+
+    .metric-list {
+      display: grid;
+      gap: 12px;
+      margin: 20px 0;
+    }
+
+    .metric-row {
+      display: grid;
+      grid-template-columns: 80px 1fr 40px;
+      gap: 10px;
+      align-items: center;
+      font-size: 0.9rem;
+      color: #cbe9f7;
+    }
+
+    .metric-bar {
+      height: 8px;
+      border-radius: 999px;
+      border: 2px solid rgba(0, 191, 255, 0.4);
+      background: rgba(0, 191, 255, 0.12);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .metric-bar span {
+      position: absolute;
+      inset: 0;
+      width: var(--fill, 50%);
+      background: linear-gradient(90deg, rgba(0, 255, 156, 0.8), rgba(0, 191, 255, 0.9));
+      box-shadow: 0 0 8px rgba(0, 191, 255, 0.28);
+      border-radius: 999px;
+      transform-origin: left center;
+      transform: scaleX(0);
+      transition: transform 700ms ease;
+    }
+
+    .metric-bar.animate span {
+      transform: scaleX(1);
+    }
+
+    .stagger-item {
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 450ms ease, transform 450ms ease;
+    }
+
+    .stagger-item.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .result-block {
+      border: 2px solid rgba(0, 191, 255, 0.32);
+      border-radius: 14px;
+      background: rgba(14, 22, 34, 0.92);
+      padding: 14px 18px;
+      display: grid;
+      gap: 8px;
+      margin: 20px 0;
+    }
+
+    .result-block.roast-block {
+      border: 2px solid rgba(255, 77, 77, 0.6);
+      background: rgba(40, 10, 16, 0.6);
+      box-shadow: 0 0 12px rgba(255, 77, 77, 0.18);
+    }
+
+    .result-block.roast-block h4 {
+      color: #ff9a9a;
+    }
+
+    .result-block h4 {
+      margin: 0;
+      font-size: 0.75rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #8fd2ee;
+    }
+
+    .result-block p {
+      margin: 0;
+      color: #e3fbff;
+      font-size: 0.98rem;
+    }
+
+    .cta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .cta-row.is-hidden {
+      display: none;
+    }
+
+    .cta-btn {
+      border: 1px solid rgba(0, 191, 255, 0.45);
+      border-radius: 12px;
+      background: rgba(0, 191, 255, 0.08);
+      color: #e2f7ff;
+      font-family: inherit;
+      font-size: 0.9rem;
+      font-weight: 600;
+      height: 40px;
+      padding: 0 16px;
+      cursor: pointer;
+      transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+    }
+
+    .cta-btn:hover,
+    .cta-btn:focus-visible {
+      transform: translateY(-1px);
+      border-color: rgba(0, 255, 156, 0.6);
+      box-shadow: 0 0 16px rgba(0, 191, 255, 0.25);
+      outline: none;
+    }
+    .viral-block {
+      border: 2px solid rgba(0, 191, 255, 0.5);
+      border-radius: 14px;
+      background: rgba(12, 26, 36, 0.9);
+      padding: 14px 18px;
+      display: grid;
+      gap: 6px;
+      box-shadow: 0 0 12px rgba(0, 191, 255, 0.18);
+      margin: 20px 0;
+    }
+
+    .result-card.exporting {
+      background: #0b111a;
+      box-shadow: none;
+      border-color: rgba(0, 191, 255, 0.6);
+    }
+
+    .result-card.exporting .result-archetype {
+      text-shadow: none;
+    }
+
+    .result-card.exporting .result-block,
+    .result-card.exporting .viral-block {
+      background: #0e1622;
+    }
+
+    .result-card.exporting .metric-bar span {
+      box-shadow: none;
+    }
+
+    .result-split {
+      display: grid;
+      gap: 12px;
+      grid-template-columns: 1fr 1fr;
+      align-items: start;
+    }
+
+    .viral-label {
+      font-size: 0.75rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #9fd9f0;
+    }
+
+    .viral-value {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #e7fff3;
+      letter-spacing: 0.04em;
+    }
+
+    @keyframes driftA {
+      0% { transform: translate(-18vw, -10vh) scale(0.9); }
+      35% { transform: translate(22vw, 6vh) scale(1.12); }
+      70% { transform: translate(58vw, -8vh) scale(1.2); }
+      100% { transform: translate(88vw, 10vh) scale(1.04); }
+    }
+
+    @keyframes driftB {
+      0% { transform: translate(20vw, -12vh) scale(0.95); }
+      34% { transform: translate(-8vw, 8vh) scale(1.15); }
+      68% { transform: translate(-44vw, 0vh) scale(1.08); }
+      100% { transform: translate(-78vw, 12vh) scale(1.2); }
+    }
+
+    @keyframes driftC {
+      0% { transform: translate(-30vw, 16vh) scale(0.92); }
+      28% { transform: translate(-4vw, -4vh) scale(1.12); }
+      66% { transform: translate(34vw, -20vh) scale(1.18); }
+      100% { transform: translate(72vw, -30vh) scale(1.02); }
+    }
+
+    @keyframes driftD {
+      0% { transform: translate(24vw, 26vh) scale(0.9); }
+      40% { transform: translate(-8vw, 4vh) scale(1.18); }
+      72% { transform: translate(-36vw, -18vh) scale(1.1); }
+      100% { transform: translate(-62vw, -28vh) scale(1.24); }
+    }
+
+    @keyframes flickerA {
+      0% { opacity: 0.48; }
+      16% { opacity: 0.84; }
+      21% { opacity: 0.38; }
+      39% { opacity: 0.76; }
+      58% { opacity: 0.46; }
+      100% { opacity: 0.7; }
+    }
+
+    @keyframes flickerB {
+      0% { opacity: 0.28; }
+      12% { opacity: 0.66; }
+      22% { opacity: 0.32; }
+      36% { opacity: 0.74; }
+      50% { opacity: 0.3; }
+      72% { opacity: 0.6; }
+      100% { opacity: 0.4; }
+    }
+
+    @media (max-width: 900px) {
+      h1 {
+        white-space: normal;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .input-shell {
+        flex-wrap: wrap;
+      }
+
+      .analyze-btn {
+        width: 100%;
+      }
+
+      .metric-row {
+        grid-template-columns: 1fr;
+        gap: 6px;
+      }
+
+      .result-split {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-lights" aria-hidden="true">
+    <span class="light-a"></span>
+    <span class="light-b"></span>
+    <span class="light-c"></span>
+    <span class="light-d"></span>
+  </div>
+  <header class="top-strip" aria-label="Top strip">
+    <div class="top-strip-title">VibeCheckr</div>
+  </header>
+  <main class="stage">
+    <section class="hero" id="inputSection" aria-label="Main panel">
+      <h1>VibeCheckr</h1>
+      <p class="tagline">Deep profile intelligence with cinematic signal aesthetics.</p>
+      <div class="panel-wrap">
+        <div class="panel">
+        <div class="meta">
+          Identity intake
+          <span class="line"></span>
+        </div>
+        <label for="username">Tweet</label>
+        <div class="input-shell">
+          <span class="at-prefix">✍</span>
+          <input id="username" type="text" name="username" placeholder="Paste your tweet">
+          <button class="analyze-btn" id="analyzeButton" type="button">Analyze -&gt;</button>
+        </div>
+        <div class="terminal" id="terminalBox" aria-live="polite">
+          <div class="terminal-output" id="terminalOutput"></div>
+        </div>
+      </div>
+      </div>
+    </section>
+  </main>
+
+  <section class="result-section hidden" id="resultSection" aria-label="Result section">
+    <div class="result-shell" id="resultShell">
+      <div class="result-card" id="resultCard">
+        <div class="result-title stagger-item">Analysis Complete</div>
+        <div class="quote stagger-item">based on your input</div>
+        <div class="result-archetype-wrap">
+          <div class="result-archetype-sub stagger-item">This tweet feels like:</div>
+          <div class="result-archetype stagger-item" id="resultArchetype">"Chaotic Overthinker"</div>
+          <div class="result-archetype-underline stagger-item"></div>
+        </div>
+
+        <div class="metric-list stagger-item">
+          <div class="metric-row">
+            <div>VIBE</div>
+            <div class="metric-bar"><span id="metricVibeBar" style="--fill: 82%;"></span></div>
+            <div id="metricVibeValue">82%</div>
+          </div>
+          <div class="metric-row">
+            <div>CHAOS</div>
+            <div class="metric-bar"><span id="metricChaosBar" style="--fill: 67%;"></span></div>
+            <div id="metricChaosValue">67%</div>
+          </div>
+          <div class="metric-row">
+            <div>DEPTH</div>
+            <div class="metric-bar"><span id="metricDepthBar" style="--fill: 55%;"></span></div>
+            <div id="metricDepthValue">55%</div>
+          </div>
+          <div class="metric-row">
+            <div>CONFIDENCE</div>
+            <div class="metric-bar"><span id="metricConfidenceBar" style="--fill: 91%;"></span></div>
+            <div id="metricConfidenceValue">91%</div>
+          </div>
+        </div>
+
+        <div class="result-split">
+          <div class="viral-block stagger-item">
+            <div class="viral-label">Viral Potential</div>
+            <div class="viral-value" id="resultViralValue">63%</div>
+          </div>
+
+          <div class="result-block roast-block stagger-item">
+            <h4>⚠ Roast</h4>
+            <p id="resultRoast">this sounded smarter in your head</p>
+          </div>
+        </div>
+
+        <div class="result-block stagger-item">
+          <h4>You sound like</h4>
+          <p id="resultSound">"wait this is actually deep"</p>
+        </div>
+
+        <div class="cta-row stagger-item" id="resultActions">
+          <button class="cta-btn" id="copyResultBtn" type="button">Copy result</button>
+          <button class="cta-btn" id="shareResultBtn" type="button">Share</button>
+          <button class="cta-btn" id="analyzeAnotherBtn" type="button">Analyze another</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <script>
+    const usernameInput = document.getElementById("username");
+    const analyzeButton = document.getElementById("analyzeButton");
+    const terminalBox = document.getElementById("terminalBox");
+    const terminalOutput = document.getElementById("terminalOutput");
+    const resultSection = document.getElementById("resultSection");
+    const resultShell = document.getElementById("resultShell");
+    const resultArchetype = document.getElementById("resultArchetype");
+    const resultRoast = document.getElementById("resultRoast");
+    const resultSound = document.getElementById("resultSound");
+    const metricVibeBar = document.getElementById("metricVibeBar");
+    const metricVibeValue = document.getElementById("metricVibeValue");
+    const metricChaosBar = document.getElementById("metricChaosBar");
+    const metricChaosValue = document.getElementById("metricChaosValue");
+    const metricDepthBar = document.getElementById("metricDepthBar");
+    const metricDepthValue = document.getElementById("metricDepthValue");
+    const metricConfidenceBar = document.getElementById("metricConfidenceBar");
+    const metricConfidenceValue = document.getElementById("metricConfidenceValue");
+    const resultViralValue = document.getElementById("resultViralValue");
+    const resultActions = document.getElementById("resultActions");
+    const inputSection = document.getElementById("inputSection");
+    const copyResultBtn = document.getElementById("copyResultBtn");
+    const shareResultBtn = document.getElementById("shareResultBtn");
+    const analyzeAnotherBtn = document.getElementById("analyzeAnotherBtn");
+
+    const SHARE_LINK = "https://your-link-here.com";
+
+    const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+    const typeLine = async (line, lineClass = "") => {
+      const row = document.createElement("div");
+      if (lineClass) {
+        row.className = lineClass;
+      }
+      terminalOutput.appendChild(row);
+
+      for (const char of line) {
+        row.textContent += char;
+        await sleep(22);
+      }
+
+      terminalOutput.appendChild(document.createTextNode("\n"));
+      terminalBox.scrollTop = terminalBox.scrollHeight;
+      await sleep(240);
+    };
+
+    const revealResult = async () => {
+      await sleep(620);
+      document.body.classList.add("is-transitioning");
+      await sleep(260);
+
+      resultSection.classList.remove("hidden");
+
+      resultSection.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+
+      await sleep(620);
+      document.body.classList.remove("is-transitioning");
+      resultShell.classList.add("is-visible");
+
+      const bars = document.querySelectorAll(".metric-bar");
+      bars.forEach((bar) => bar.classList.remove("animate"));
+      requestAnimationFrame(() => {
+        bars.forEach((bar) => bar.classList.add("animate"));
+      });
+
+      const staggerItems = resultShell.querySelectorAll(".stagger-item");
+      staggerItems.forEach((item) => item.classList.remove("show"));
+      staggerItems.forEach((item, index) => {
+        setTimeout(() => item.classList.add("show"), 120 + index * 90);
+      });
+    };
+
+    const startLines = [
+      "receiving input...",
+      "analyzing tweet...",
+      "reading carefully...",
+      "processing text...",
+      "initial scan..."
+    ];
+
+    const analysisLines = [
+      "detecting tone...",
+      "measuring vibe...",
+      "analyzing structure...",
+      "checking intent...",
+      "scanning for meaning...",
+      "evaluating clarity...",
+      "detecting emotional signal..."
+    ];
+
+    const roastLines = [
+      "this sounded better in your head...",
+      "detecting unnecessary depth...",
+      "confidence level suspicious...",
+      "this might be a cry for attention...",
+      "checking if this is actually good...",
+      "overthinking detected...",
+      "this could've stayed in drafts...",
+      "interesting... very interesting...",
+      "we need to talk about this tweet...",
+      "this is getting concerning...",
+      "not sure what you meant here...",
+      "analyzing main character energy..."
+    ];
+
+    const finalLines = [
+      "calculating final verdict...",
+      "generating results...",
+      "preparing judgment...",
+      "almost done...",
+      "finalizing analysis..."
+    ];
+
+    const getRandom = (arr) => arr[Math.floor(Math.random() * arr.length)];
+
+    const getMultiple = (arr, count) =>
+      [...arr].sort(() => 0.5 - Math.random()).slice(0, count);
+
+    const generateLoadingLines = () => {
+      return [
+        `> ${getRandom(startLines)}`,
+        ...getMultiple(analysisLines, 2).map((line) => `> ${line}`),
+        ...getMultiple(roastLines, 3).map((line) => `> ${line}`),
+        `> ${getRandom(finalLines)}`
+      ];
+    };
+
+    const clamp = (value) => Math.max(0, Math.min(100, value));
+
+    const getArchetype = ({ chaos, depth, confidence }) => {
+      if (chaos > 70) return "Chaotic Thinker";
+      if (depth > 70) return "Deep Philosopher";
+      if (confidence > 80) return "Main Character Energy";
+      if (depth < 30 && chaos < 30) return "Casual Observer";
+      return "Overthinking Human";
+    };
+
+    const roastPool = {
+      chaos: [
+        "this escalated quickly",
+        "you lost control halfway through",
+        "this feels like a live breakdown",
+        "too much energy, not enough direction"
+      ],
+      deep: [
+        "this sounded deeper than it is",
+        "almost profound, but not quite",
+        "you tried to say something big here",
+        "this wants to be deep so badly"
+      ],
+      lowConfidence: [
+        "you weren't even sure about this",
+        "this feels like hesitation in text form",
+        "you backed out mid-thought",
+        "this lacks commitment"
+      ],
+      generic: [
+        "this made sense in your head",
+        "you really posted this",
+        "interesting decision",
+        "this exists now"
+      ]
+    };
+
+    const soundLikePool = {
+      chaos: [
+        "mid-thought at 3am",
+        "typing faster than thinking",
+        "a brain buffering in real time",
+        "too many tabs open mentally"
+      ],
+      deep: [
+        "trying to explain something important",
+        "thinking out loud about life",
+        "searching for meaning",
+        "writing like it’s a journal entry"
+      ],
+      confident: [
+        "you know exactly what you're saying",
+        "someone making a statement",
+        "you believe this fully",
+        "no doubts, just posting"
+      ],
+      lowConfidence: [
+        "just saying",
+        "not fully committed to the idea",
+        "testing the waters",
+        "half sure about this"
+      ],
+      neutral: [
+        "just typing a thought",
+        "a normal moment online",
+        "casually sharing something",
+        "nothing too serious"
+      ]
+    };
+
+    const pickFromPool = (pool, seed, salt) => {
+      const idxSeed = hashText(`${seed}:${salt}`);
+      return pool[idxSeed % pool.length];
+    };
+
+    const getRoast = ({ depth, chaos, confidence, seed }) => {
+      let pool;
+      if (chaos > 70) {
+        pool = roastPool.chaos;
+      } else if (depth > 70) {
+        pool = roastPool.deep;
+      } else if (confidence < 40) {
+        pool = roastPool.lowConfidence;
+      } else {
+        pool = roastPool.generic;
+      }
+      return pickFromPool(pool, seed, "roast");
+    };
+
+    const getSoundLike = ({ chaos, depth, confidence, seed }) => {
+      let pool;
+      if (chaos > 70) {
+        pool = soundLikePool.chaos;
+      } else if (depth > 65) {
+        pool = soundLikePool.deep;
+      } else if (confidence > 75) {
+        pool = soundLikePool.confident;
+      } else if (confidence < 40) {
+        pool = soundLikePool.lowConfidence;
+      } else {
+        pool = soundLikePool.neutral;
+      }
+      return pickFromPool(pool, seed, "sound");
+    };
+
+    const hashText = (text) => {
+      let hash = 0;
+      for (let i = 0; i < text.length; i += 1) {
+        hash = (hash << 5) - hash + text.charCodeAt(i);
+        hash |= 0;
+      }
+      return Math.abs(hash);
+    };
+
+    const seededRandom = (seed) => {
+      return (seed % 1000) / 1000;
+    };
+
+    const analyzeTweet = (input) => {
+      const text = input.toLowerCase();
+      const words = text.trim().split(/\s+/).filter(Boolean);
+      const length = words.length;
+
+      const seed = hashText(text);
+      const jitter = seededRandom(seed) * 20;
+
+      let chaos = 0;
+      if (/[A-Z]{3,}/.test(input)) chaos += 20;
+      if (input.includes("!!!")) chaos += 20;
+      if (input.includes("???")) chaos += 15;
+      if (length < 5) chaos += 10;
+      chaos = Math.min(chaos + jitter, 100);
+
+      const deepWords = [
+        "life", "meaning", "time", "truth", "reality",
+        "feel", "exist", "why", "think"
+      ];
+
+      let depth = 0;
+      deepWords.forEach((word) => {
+        if (text.includes(word)) depth += 10;
+      });
+      if (length > 15) depth += 20;
+      depth = Math.min(depth, 100);
+
+      let confidence = 50;
+      if (text.includes("i think")) confidence -= 10;
+      if (text.includes("maybe")) confidence -= 15;
+      if (text.includes("idk")) confidence -= 20;
+      if (text.includes("will")) confidence += 10;
+      if (text.includes("is")) confidence += 5;
+      confidence = clamp(confidence);
+
+      let vibe = (depth + confidence + (100 - chaos)) / 3;
+      vibe = Math.round(vibe);
+
+      const viralRaw =
+        vibe * 0.4 +
+        chaos * 0.35 +
+        confidence * 0.25 -
+        Math.abs(depth - 50) * 0.1;
+      const viral = Math.round(clamp(viralRaw));
+
+      return {
+        archetype: getArchetype({ chaos, depth, confidence }),
+        metrics: {
+          vibe: Math.round(vibe),
+          chaos: Math.round(chaos),
+          depth: Math.round(depth),
+          confidence: Math.round(confidence),
+          viral
+        },
+        roast: getRoast({ chaos, depth, confidence, seed }),
+        sound: getSoundLike({ chaos, depth, confidence, seed })
+      };
+    };
+
+    const setMetric = (barEl, valueEl, value) => {
+      barEl.style.setProperty("--fill", `${value}%`);
+      valueEl.textContent = `${value}%`;
+    };
+
+    const updateResultUI = (result) => {
+      resultArchetype.textContent = `"${result.archetype}"`;
+      resultRoast.textContent = result.roast;
+      resultSound.textContent = result.sound;
+      setMetric(metricVibeBar, metricVibeValue, result.metrics.vibe);
+      setMetric(metricChaosBar, metricChaosValue, result.metrics.chaos);
+      setMetric(metricDepthBar, metricDepthValue, result.metrics.depth);
+      setMetric(metricConfidenceBar, metricConfidenceValue, result.metrics.confidence);
+      resultViralValue.textContent = `${result.metrics.viral}%`;
+    };
+
+    const buildResultText = () => {
+      return [
+        "THIS TWEET FEELS LIKE:",
+        resultArchetype.textContent,
+        "",
+        `VIBE: ${metricVibeValue.textContent}`,
+        `CHAOS: ${metricChaosValue.textContent}`,
+        `DEPTH: ${metricDepthValue.textContent}`,
+        `CONFIDENCE: ${metricConfidenceValue.textContent}`,
+        `VIRAL POTENTIAL: ${resultViralValue.textContent}`,
+        "",
+        "ROAST:",
+        resultRoast.textContent,
+        "",
+        "YOU SOUND LIKE:",
+        resultSound.textContent,
+        "",
+        "Analyzed with VibeCheckr"
+      ].join("\n");
+    };
+
+    const resultCard = document.getElementById("resultCard");
+
+    // Render the result card to a high-res PNG using html2canvas.
+    // We use a high scale based on devicePixelRatio to keep text crisp.
+    const renderCardToPng = async (node) => {
+      const actionsWasHidden = resultActions.classList.contains("is-hidden");
+      resultActions.classList.add("is-hidden");
+      const wasExporting = node.classList.contains("exporting");
+      node.classList.add("exporting");
+      await new Promise((resolve) => requestAnimationFrame(resolve));
+
+      const scale = Math.max(2, window.devicePixelRatio || 1);
+      const canvas = await html2canvas(node, {
+        backgroundColor: "#0b111a",
+        scale,
+        useCORS: true,
+        allowTaint: false,
+        logging: false
+      });
+
+      if (!actionsWasHidden) {
+        resultActions.classList.remove("is-hidden");
+      }
+      if (!wasExporting) {
+        node.classList.remove("exporting");
+      }
+
+      const pngBlob = await new Promise((resolve) => canvas.toBlob(resolve, "image/png"));
+      if (!pngBlob) {
+        throw new Error("PNG export failed");
+      }
+      return pngBlob;
+    };
+
+    const copyNodeAsImage = async (node) => {
+      try {
+        const pngBlob = await renderCardToPng(node);
+
+        const canWriteImage =
+          window.isSecureContext &&
+          navigator.clipboard &&
+          window.ClipboardItem;
+
+        if (canWriteImage) {
+          await navigator.clipboard.write([
+            new ClipboardItem({ "image/png": pngBlob })
+          ]);
+          return { status: "copied" };
+        }
+
+        const downloadUrl = URL.createObjectURL(pngBlob);
+        const a = document.createElement("a");
+        a.href = downloadUrl;
+        a.download = "vibecheckr-result.png";
+        a.click();
+        URL.revokeObjectURL(downloadUrl);
+        return { status: "downloaded" };
+      } catch (error) {
+        return { status: "fallback" };
+      }
+    };
+
+    // Button logic: Copy result (image only)
+    copyResultBtn.addEventListener("click", async () => {
+      const prev = copyResultBtn.textContent;
+      copyResultBtn.textContent = "Preparing...";
+      const outcome = await copyNodeAsImage(resultCard);
+      if (outcome.status === "copied") {
+        copyResultBtn.textContent = "Copied";
+      } else if (outcome.status === "downloaded") {
+        copyResultBtn.textContent = "Downloaded";
+      } else {
+        copyResultBtn.textContent = "Save image";
+      }
+      setTimeout(() => {
+        copyResultBtn.textContent = prev;
+      }, 1400);
+    });
+
+    // Button logic: Share
+    shareResultBtn.addEventListener("click", () => {
+      const shareText = [
+        "I checked my tweet with VibeCheckr",
+        "",
+        "THIS TWEET FEELS LIKE:",
+        resultArchetype.textContent,
+        "",
+        `VIBE: ${metricVibeValue.textContent}`,
+        `CHAOS: ${metricChaosValue.textContent}`,
+        `DEPTH: ${metricDepthValue.textContent}`,
+        `CONFIDENCE: ${metricConfidenceValue.textContent}`,
+        `VIRAL POTENTIAL: ${resultViralValue.textContent}`,
+        "",
+        `Try it here: ${SHARE_LINK}`
+      ].join("\n");
+
+      const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}`;
+      window.open(url, "_blank", "noopener");
+    });
+
+    // Button logic: Analyze another
+    analyzeAnotherBtn.addEventListener("click", () => {
+      usernameInput.value = "";
+      terminalOutput.textContent = "";
+      terminalBox.classList.remove("is-active");
+      resultShell.classList.remove("is-visible");
+      resultSection.classList.add("hidden");
+
+      inputSection.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+    });
+
+    analyzeButton.addEventListener("click", async () => {
+      const input = usernameInput.value.trim();
+      const result = analyzeTweet(input);
+      const steps = generateLoadingLines();
+
+      analyzeButton.disabled = true;
+      terminalOutput.textContent = "";
+      resultShell.classList.remove("is-visible");
+      terminalBox.classList.add("is-active");
+
+      for (const step of steps) {
+        await typeLine(step);
+      }
+
+      await typeLine("> RESULT READY", "ready");
+      updateResultUI(result);
+      await revealResult();
+      analyzeButton.disabled = false;
+    });
+  </script>
+</body>
+</html>
