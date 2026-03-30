@@ -1,0 +1,460 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Twitter CV</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap');
+
+      :root {
+        font-family: 'Space Grotesk', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      }
+
+      .mono-label {
+        font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+      }
+
+      @keyframes fadeUp {
+        0% {
+          opacity: 0;
+          transform: translateY(16px);
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes slowFloat {
+        0% {
+          transform: translateY(0px);
+        }
+        50% {
+          transform: translateY(-10px);
+        }
+        100% {
+          transform: translateY(0px);
+        }
+      }
+      @keyframes pulseDot {
+        0%,
+        100% {
+          opacity: 0.6;
+          transform: scale(1);
+        }
+        50% {
+          opacity: 1;
+          transform: scale(1.2);
+        }
+      }
+      @keyframes blink {
+        0%,
+        100% {
+          opacity: 0;
+        }
+        50% {
+          opacity: 1;
+        }
+      }
+      .blink {
+        animation: blink 1s step-end infinite;
+      }
+    </style>
+  </head>
+  <body class="bg-[#050505] text-white antialiased">
+    <div class="relative min-h-[100svh] overflow-hidden">
+      <div
+        class="absolute inset-0 opacity-40"
+        style="
+          background-image: linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+          background-size: 48px 48px;
+        "
+      ></div>
+
+      <div class="pointer-events-none absolute inset-0">
+        <div
+          class="absolute -top-48 left-1/2 h-[32rem] w-[32rem] -translate-x-1/2 rounded-full bg-[radial-gradient(circle,rgba(0,255,198,0.22),rgba(0,0,0,0)_60%)] blur-3xl"
+        ></div>
+        <div
+          class="absolute bottom-[-20%] right-[-10%] h-[34rem] w-[34rem] rounded-full bg-[radial-gradient(circle,rgba(0,209,255,0.18),rgba(0,0,0,0)_60%)] blur-3xl"
+        ></div>
+      </div>
+
+      <header class="relative z-10 flex items-center px-6 py-6 sm:px-10">
+        <div class="text-lg font-semibold tracking-tight">
+          <span
+            class="mr-2 inline-block h-2 w-2 rounded-full bg-[#00FFC6] motion-safe:animate-[pulseDot_2.4s_ease-in-out_infinite]"
+          ></span>
+          Twitter <span class="text-[#00FFC6]">CV</span>
+        </div>
+      </header>
+
+      <main
+        class="relative z-10 flex min-h-[calc(100svh-80px)] items-center justify-center px-6 pb-16 sm:px-10"
+      >
+        <div class="flex w-full max-w-4xl flex-col items-center gap-10 text-center">
+          <div class="space-y-5 motion-safe:animate-[fadeUp_0.8s_ease-out]">
+            <div class="flex flex-col items-center justify-center gap-3 text-sm text-[#9CA3AF] sm:flex-row sm:gap-4">
+              <div class="flex items-center gap-2">
+                <span
+                  class="inline-flex h-6 w-6 items-center justify-center rounded-full border border-[#00FFC6]/30 bg-[#00FFC6]/10 text-[#00FFC6]"
+                >
+                  <svg viewBox="0 0 24 24" class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 3l2.3 4.7L19 10l-4.7 2.3L12 17l-2.3-4.7L5 10l4.7-2.3L12 3z"></path>
+                  </svg>
+                </span>
+                <span>Find your niche</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span
+                  class="inline-flex h-6 w-6 items-center justify-center rounded-full border border-[#00FFC6]/30 bg-[#00FFC6]/10 text-[#00FFC6]"
+                >
+                  <svg viewBox="0 0 24 24" class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z"></path>
+                  </svg>
+                </span>
+                <span>Discover viral tweets</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span
+                  class="inline-flex h-6 w-6 items-center justify-center rounded-full border border-[#00FFC6]/30 bg-[#00FFC6]/10 text-[#00FFC6]"
+                >
+                  <svg viewBox="0 0 24 24" class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 3l7 9-7 9-7-9 7-9z"></path>
+                  </svg>
+                </span>
+                <span>Share your CV</span>
+              </div>
+            </div>
+            <h1 class="text-5xl font-semibold tracking-tight sm:text-6xl lg:text-7xl">
+              This is your Twitter
+              <span class="bg-gradient-to-br from-[#00FFC6] via-[#00FFC6] to-[#00D1FF] bg-clip-text text-transparent"
+                >CV</span
+              >
+            </h1>
+            <p class="mx-auto max-w-2xl text-lg text-[#9CA3AF] sm:text-xl">
+              Analyze your profile and generate a shareable resume.
+            </p>
+          </div>
+
+          <div
+            class="flex w-full max-w-xl flex-col gap-3 motion-safe:animate-[fadeUp_0.9s_ease-out] sm:flex-row"
+          >
+            <label class="sr-only" for="username">Twitter username</label>
+            <div
+              class="flex h-14 flex-1 items-center gap-2 rounded-lg border border-white/10 bg-[#0B0B0B] px-4 text-white transition focus-within:border-[#00FFC6]/70 focus-within:ring-2 focus-within:ring-[#00FFC6]/20"
+            >
+              <span class="text-[#00FFC6]">@</span>
+              <input
+                id="username"
+                type="text"
+                placeholder="elonmusk"
+                class="w-full bg-transparent text-white placeholder:text-[#9CA3AF] outline-none"
+              />
+            </div>
+            <button
+              id="analyze-btn"
+              class="h-14 rounded-lg bg-[#00FFC6] px-6 font-semibold text-black transition-all duration-300 ease-out hover:brightness-95 hover:shadow-[0_0_28px_rgba(0,255,198,0.28)]"
+            >
+              Analyze -&gt;
+            </button>
+          </div>
+
+          <div class="w-full max-w-xl motion-safe:animate-[fadeUp_1s_ease-out]">
+            <div class="rounded-2xl border border-white/10 bg-[#0B0B0B] p-4 text-left shadow-[0_0_40px_rgba(0,0,0,0.45)]">
+              <div class="mono-label mb-3 flex items-center gap-2 text-xs text-[#9CA3AF]">
+                <span
+                  class="inline-block h-2 w-2 rounded-full bg-[#00FFC6]/80 motion-safe:animate-[pulseDot_2.4s_ease-in-out_infinite]"
+                ></span>
+                live analysis
+              </div>
+              <div class="mono-label space-y-2 text-sm">
+                <p class="text-[#9CA3AF]">
+                  &gt; decoding creator profile:
+                  <span id="analysis-handle" class="text-[#00FFC6]">@elonmusk</span>...
+                </p>
+                <p class="text-[#9CA3AF]">
+                  &gt; archetype: <span id="archetype-value" class="text-white">Builder</span>
+                  <span class="analysis-cursor blink text-[#00FFC6] hidden">|</span>
+                </p>
+                <p class="text-[#9CA3AF]">
+                  &gt; reputation: <span id="reputation-value" class="text-white">growing</span>
+                  <span class="analysis-cursor blink text-[#00FFC6] hidden">|</span>
+                </p>
+                <p class="text-[#9CA3AF]">
+                  &gt; style: <span id="style-value" class="text-white">raw</span>
+                  <span class="analysis-cursor blink text-[#00FFC6] hidden">|</span>
+                </p>
+                <p class="text-[#9CA3AF]">&gt; generating Twitter CV...</p>
+              </div>
+            </div>
+          </div>
+
+          <section
+            id="result-section"
+            class="hidden mt-16 w-full max-w-5xl text-left"
+          >
+            <p class="mono-label text-xs uppercase tracking-[0.35em] text-[#9CA3AF]">
+              TWITTER CV RESULT
+            </p>
+            <h2 class="mt-3 text-3xl font-semibold sm:text-4xl">Your profile, decoded.</h2>
+
+            <div class="relative mt-8">
+              <div
+                class="absolute -inset-1 rounded-[32px] bg-gradient-to-r from-[#00FFC6]/25 to-[#00D1FF]/20 blur-2xl"
+              ></div>
+              <div
+                class="relative rounded-[32px] border border-white/10 bg-[#111111] p-6 shadow-[0_0_50px_rgba(0,0,0,0.5)] sm:p-8"
+              >
+                <div class="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
+                  <div class="flex items-center gap-4">
+                    <div class="h-16 w-16 overflow-hidden rounded-full bg-gradient-to-br from-[#00FFC6] to-[#00D1FF]">
+                      <img
+                        id="result-avatar"
+                        src=""
+                        alt="Avatar"
+                        class="h-full w-full object-cover"
+                        onerror="this.style.display='none'"
+                      />
+                    </div>
+                    <div>
+                      <div id="result-name" class="text-2xl font-semibold">Elon Musk</div>
+                      <div id="result-username" class="text-sm text-[#9CA3AF]">@elonmusk</div>
+                    </div>
+                  </div>
+                  <span
+                    id="result-badge"
+                    class="inline-flex w-fit items-center rounded-full border border-[#00FFC6]/40 bg-[#00FFC6]/10 px-4 py-1 text-xs font-semibold text-[#00FFC6]"
+                  >
+                    Legendary
+                  </span>
+                </div>
+
+                <div class="mt-8 grid grid-cols-2 gap-4 text-sm sm:grid-cols-4">
+                  <div class="rounded-xl border border-white/5 bg-black/30 p-4">
+                    <div class="text-[#9CA3AF]">Archetype</div>
+                    <div id="result-archetype" class="mt-2 font-semibold">Visionary Builder</div>
+                  </div>
+                  <div class="rounded-xl border border-white/5 bg-black/30 p-4">
+                    <div class="text-[#9CA3AF]">Reputation</div>
+                    <div id="result-reputation" class="mt-2 font-semibold">High Signal Account</div>
+                  </div>
+                  <div class="rounded-xl border border-white/5 bg-black/30 p-4">
+                    <div class="text-[#9CA3AF]">Style</div>
+                    <div id="result-style" class="mt-2 font-semibold">Bold, future-driven</div>
+                  </div>
+                  <div class="rounded-xl border border-white/5 bg-black/30 p-4">
+                    <div class="text-[#9CA3AF]">Niche</div>
+                    <div id="result-niche" class="mt-2 font-semibold">AI / Startups / Tech</div>
+                  </div>
+                </div>
+
+                <div
+                  id="result-summary"
+                  class="mt-6 rounded-2xl border border-white/5 bg-black/40 p-5 text-sm text-[#9CA3AF]"
+                >
+                  Known for sharp opinions, product-first thinking, and high-impact posting.
+                </div>
+
+                <div class="mt-6 grid grid-cols-1 gap-4 text-sm sm:grid-cols-3">
+                  <div class="rounded-xl border border-white/5 bg-black/30 p-4">
+                    <div class="text-[#9CA3AF]">Followers</div>
+                    <div id="result-followers" class="mt-2 text-lg font-semibold">218.4M</div>
+                  </div>
+                  <div class="rounded-xl border border-white/5 bg-black/30 p-4">
+                    <div class="text-[#9CA3AF]">Best Tweet</div>
+                    <div id="result-bestTweet" class="mt-2 text-lg font-semibold">12.4M views</div>
+                  </div>
+                  <div class="rounded-xl border border-white/5 bg-black/30 p-4">
+                    <div class="text-[#9CA3AF]">Creator Rank</div>
+                    <div id="result-creatorRank" class="mt-2 text-lg font-semibold">Top 1%</div>
+                  </div>
+                </div>
+
+                <div class="mt-8 flex flex-col gap-3 sm:flex-row">
+                  <button
+                    class="h-12 flex-1 rounded-lg border border-white/10 bg-[#0B0B0B] text-sm font-semibold text-white transition hover:border-[#00FFC6]/50 hover:text-[#00FFC6]"
+                  >
+                    Share on X
+                  </button>
+                  <button
+                    class="h-12 flex-1 rounded-lg bg-[#00FFC6] text-sm font-semibold text-black transition hover:brightness-95 hover:shadow-[0_0_24px_rgba(0,255,198,0.25)]"
+                  >
+                    Download Image
+                  </button>
+                </div>
+              </div>
+            </div>
+          </section>
+
+        </div>
+      </main>
+    </div>
+    <script>
+      const input = document.getElementById("username");
+      const analyzeButton = document.getElementById("analyze-btn");
+      const handleSpan = document.getElementById("analysis-handle");
+      const archetypeValue = document.getElementById("archetype-value");
+      const reputationValue = document.getElementById("reputation-value");
+      const styleValue = document.getElementById("style-value");
+      const resultSection = document.getElementById("result-section");
+      const resultAvatar = document.getElementById("result-avatar");
+      const resultName = document.getElementById("result-name");
+      const resultUsername = document.getElementById("result-username");
+      const resultBadge = document.getElementById("result-badge");
+      const resultArchetype = document.getElementById("result-archetype");
+      const resultReputation = document.getElementById("result-reputation");
+      const resultStyle = document.getElementById("result-style");
+      const resultNiche = document.getElementById("result-niche");
+      const resultSummary = document.getElementById("result-summary");
+      const resultFollowers = document.getElementById("result-followers");
+      const resultBestTweet = document.getElementById("result-bestTweet");
+      const resultCreatorRank = document.getElementById("result-creatorRank");
+      const cursors = document.querySelectorAll(".analysis-cursor");
+
+      const archetypes = [
+        "Builder",
+        "Thinker",
+        "Visionary",
+        "Shitposter",
+        "Educator",
+        "Operator",
+        "Silent Builder",
+        "Growth Hacker",
+      ];
+
+      const reputations = [
+        "low signal",
+        "growing",
+        "underrated",
+        "high signal",
+        "attention magnet",
+        "elite account",
+      ];
+
+      const styles = [
+        "raw",
+        "provocative",
+        "minimal",
+        "story-driven",
+        "sharp",
+        "chaotic",
+        "clean",
+      ];
+
+      const updateHandle = () => {
+        const value = input.value.trim();
+        handleSpan.textContent = value ? `@${value}` : "@elonmusk";
+      };
+
+      let timeouts = [];
+      let loadingTimeout = null;
+
+      const clearTimers = () => {
+        timeouts.forEach(clearInterval);
+        timeouts = [];
+      };
+
+      const hashString = (value) => {
+        let hash = 2166136261;
+        for (let i = 0; i < value.length; i += 1) {
+          hash ^= value.charCodeAt(i);
+          hash = Math.imul(hash, 16777619);
+        }
+        return hash >>> 0;
+      };
+
+      const pickStable = (values, seed, salt) => {
+        const hash = hashString(`${seed}:${salt}`);
+        return values[hash % values.length];
+      };
+
+      const createRng = (seedValue) => {
+        let t = seedValue >>> 0;
+        return () => {
+          t += 0x6D2B79F5;
+          let r = Math.imul(t ^ (t >>> 15), 1 | t);
+          r ^= r + Math.imul(r ^ (r >>> 7), 61 | r);
+          return ((r ^ (r >>> 14)) >>> 0) / 4294967296;
+        };
+      };
+
+      const runSlot = (values, valueEl, rng, speed = 120) => {
+        const id = setInterval(() => {
+          const index = Math.floor(rng() * values.length);
+          valueEl.textContent = values[index];
+        }, speed);
+        timeouts.push(id);
+      };
+
+      const applyResultData = (data) => {
+        if (!data) return;
+        if (data.name) resultName.textContent = data.name;
+        if (data.username) resultUsername.textContent = data.username;
+        if (data.badge) resultBadge.textContent = data.badge;
+        if (data.archetype) resultArchetype.textContent = data.archetype;
+        if (data.reputation) resultReputation.textContent = data.reputation;
+        if (data.style) resultStyle.textContent = data.style;
+        if (data.niche) resultNiche.textContent = data.niche;
+        if (data.summary) resultSummary.textContent = data.summary;
+        if (data.followers) resultFollowers.textContent = data.followers;
+        if (data.bestTweet) resultBestTweet.textContent = data.bestTweet;
+        if (data.creatorRank) resultCreatorRank.textContent = data.creatorRank;
+        if (data.avatar) {
+          resultAvatar.style.display = "block";
+          resultAvatar.src = data.avatar;
+        }
+      };
+
+      input.addEventListener("input", updateHandle);
+      updateHandle();
+
+      const startAnimation = async () => {
+        clearTimers();
+        if (loadingTimeout) {
+          clearTimeout(loadingTimeout);
+        }
+        resultSection.classList.add("hidden");
+        resultSection.style.animation = "";
+        cursors.forEach((cursor) => cursor.classList.remove("hidden"));
+        const seed = input.value.trim().toLowerCase() || "elonmusk";
+        const rngArchetype = createRng(hashString(`${seed}:archetype`));
+        const rngReputation = createRng(hashString(`${seed}:reputation`));
+        const rngStyle = createRng(hashString(`${seed}:style`));
+        runSlot(archetypes, archetypeValue, rngArchetype, 90);
+        runSlot(reputations, reputationValue, rngReputation, 120);
+        runSlot(styles, styleValue, rngStyle, 150);
+
+        const minDelay = new Promise((resolve) => {
+          loadingTimeout = setTimeout(resolve, 2400);
+        });
+
+        let profileData = null;
+        try {
+          const response = await fetch(`/api/twittercv?handle=${encodeURIComponent(seed)}`);
+          if (response.ok) {
+            profileData = await response.json();
+          }
+        } catch (error) {
+          profileData = null;
+        }
+
+        await minDelay;
+        clearTimers();
+        archetypeValue.textContent = pickStable(archetypes, seed, "archetype");
+        reputationValue.textContent = pickStable(reputations, seed, "reputation");
+        styleValue.textContent = pickStable(styles, seed, "style");
+        cursors.forEach((cursor) => cursor.classList.add("hidden"));
+        applyResultData(profileData);
+        resultSection.classList.remove("hidden");
+        resultSection.style.animation = "fadeUp 0.8s ease-out";
+        resultSection.scrollIntoView({ behavior: "smooth", block: "start" });
+      };
+
+      analyzeButton.addEventListener("click", startAnimation);
+    </script>
+  </body>
+</html>
